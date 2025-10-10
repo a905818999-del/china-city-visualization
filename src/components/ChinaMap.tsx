@@ -301,194 +301,141 @@ const ChinaMap: React.FC<ChinaMapProps> = ({ cities, selectedCity, onCitySelect,
         <MapController center={mapCenter} zoom={mapZoom} />
       </MapContainer>
 
-      {/* 距离控制面板 */}
-      <DistanceControls>
-        <h3 style={{ margin: '0 0 15px 0', color: '#1f2937', fontSize: '16px' }}>距离测量工具</h3>
-        
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              checked={showDistanceCircles}
-              onChange={(e) => setShowDistanceCircles(e.target.checked)}
-              style={{ marginRight: '8px' }}
-            />
-            <span style={{ fontSize: '14px', color: '#374151' }}>显示距离圆圈</span>
-          </label>
-        </div>
-
-        {circleCenter && (
-          <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f3f4f6', borderRadius: '6px' }}>
-            <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#1f2937', fontWeight: 'bold' }}>
-              中心点: {circleCenter.name}
-            </p>
-            <p style={{ margin: '0', fontSize: '12px', color: '#6b7280' }}>
-              {circleCenter.province} | 热度: {Math.round(circleCenter.overallHeat)}
-            </p>
-            <button
-              onClick={clearCircleCenter}
-              style={{
-                marginTop: '8px',
-                padding: '4px 8px',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-                background: '#ffffff',
-                cursor: 'pointer',
-                fontSize: '12px',
-                color: '#ef4444'
-              }}
-            >
-              清除中心点
-            </button>
-          </div>
-        )}
-
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#374151' }}>
-            圆圈间隔 (公里):
-          </label>
-          <select
-            value={circleInterval}
-            onChange={(e) => setCircleInterval(Number(e.target.value))}
-            style={{
-              width: '100%',
-              padding: '6px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px'
-            }}
-          >
-            <option value={250}>250公里</option>
-            <option value={500}>500公里</option>
-            <option value={1000}>1000公里</option>
-          </select>
-        </div>
-
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#374151' }}>
-            最大距离 (公里):
-          </label>
-          <select
-            value={maxCircleDistance}
-            onChange={(e) => setMaxCircleDistance(Number(e.target.value))}
-            style={{
-              width: '100%',
-              padding: '6px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px'
-            }}
-          >
-            <option value={1500}>1500公里</option>
-            <option value={2500}>2500公里</option>
-            <option value={3500}>3500公里</option>
-          </select>
-        </div>
-
-        <div style={{ fontSize: '12px', color: '#6b7280', lineHeight: '1.4' }}>
-          <p style={{ margin: '0 0 5px 0' }}>💡 使用说明:</p>
-          <p style={{ margin: '0 0 3px 0' }}>1. 勾选"显示距离圆圈"</p>
-          <p style={{ margin: '0 0 3px 0' }}>2. 点击任意城市设为中心</p>
-          <p style={{ margin: '0' }}>3. 查看同心圆距离范围</p>
-        </div>
-      </DistanceControls>
-
-      {/* 图例 */}
+      {/* 图例和控制面板 */}
       <MapControls>
-        <h3 style={{ margin: '0 0 15px 0', color: '#1f2937', fontSize: '16px' }}>热度图例</h3>
+        <h4 style={{ margin: '0 0 15px 0', color: '#1f2937', fontSize: '16px' }}>热度等级图例</h4>
         {heatLevels.map((level) => (
           <LegendItem key={level.level} color={level.color}>
             <span style={{ fontSize: '14px', color: '#374151' }}>
-              {level.name} ({level.range[1] === Infinity 
-                ? `${Math.round(level.range[0])}+` 
-                : `${Math.round(level.range[0])}-${Math.round(level.range[1])}`
-              })
+              {level.level}级 - {level.name}
             </span>
           </LegendItem>
         ))}
         
-        <div style={{ marginTop: '20px', borderTop: '1px solid #e5e7eb', paddingTop: '15px' }}>
-          <h4 style={{ margin: '0 0 10px 0', color: '#1f2937', fontSize: '14px' }}>文字缩放</h4>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button
-              onClick={() => setTextScale(Math.max(0.5, textScale - 0.1))}
-              style={{
-                padding: '4px 8px',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-                background: '#f9fafb',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              A-
-            </button>
-            <span style={{ fontSize: '12px', color: '#6b7280', minWidth: '40px', textAlign: 'center' }}>
-              {Math.round(textScale * 100)}%
-            </span>
-            <button
-              onClick={() => setTextScale(Math.min(2.0, textScale + 0.1))}
-              style={{
-                padding: '4px 8px',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-                background: '#f9fafb',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              A+
-            </button>
-            <button
-              onClick={() => setTextScale(1.0)}
-              style={{
-                padding: '4px 8px',
-                border: '1px solid #d1d5db',
-                borderRadius: '4px',
-                background: '#f3f4f6',
-                cursor: 'pointer',
-                fontSize: '10px',
-                marginLeft: '4px'
-              }}
-            >
-              重置
-            </button>
+        <div style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #e5e7eb' }}>
+          <h4 style={{ margin: '0 0 10px 0', color: '#1f2937', fontSize: '14px' }}>文字大小</h4>
+          <input
+            type="range"
+            min="0.5"
+            max="2"
+            step="0.1"
+            value={textScale}
+            onChange={(e) => setTextScale(parseFloat(e.target.value))}
+            style={{ width: '100%' }}
+          />
+          <div style={{ fontSize: '12px', color: '#6b7280', textAlign: 'center', marginTop: '5px' }}>
+            {Math.round(textScale * 100)}%
           </div>
         </div>
       </MapControls>
 
+      {/* 距离测量控制面板 */}
+      <DistanceControls>
+        <h4 style={{ margin: '0 0 15px 0', color: '#1f2937', fontSize: '16px' }}>距离测量工具</h4>
+        
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', fontSize: '14px', color: '#374151' }}>
+            <input
+              type="checkbox"
+              checked={showDistanceCircles}
+              onChange={(e) => {
+                setShowDistanceCircles(e.target.checked);
+                if (!e.target.checked) {
+                  setCircleCenter(null);
+                }
+              }}
+              style={{ marginRight: '8px' }}
+            />
+            启用距离圆圈
+          </label>
+        </div>
+
+        {showDistanceCircles && (
+          <>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', fontSize: '14px', color: '#374151', marginBottom: '5px' }}>
+                圆圈间隔 (公里):
+              </label>
+              <input
+                type="number"
+                min="100"
+                max="1000"
+                step="100"
+                value={circleInterval}
+                onChange={(e) => setCircleInterval(Number(e.target.value))}
+                style={{ width: '100%', padding: '5px', border: '1px solid #d1d5db', borderRadius: '4px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', fontSize: '14px', color: '#374151', marginBottom: '5px' }}>
+                最大距离 (公里):
+              </label>
+              <input
+                type="number"
+                min="500"
+                max="5000"
+                step="500"
+                value={maxCircleDistance}
+                onChange={(e) => setMaxCircleDistance(Number(e.target.value))}
+                style={{ width: '100%', padding: '5px', border: '1px solid #d1d5db', borderRadius: '4px' }}
+              />
+            </div>
+
+            {circleCenter && (
+              <div style={{ padding: '10px', backgroundColor: '#f0f9ff', borderRadius: '6px', marginBottom: '10px' }}>
+                <div style={{ fontSize: '14px', color: '#0369a1', fontWeight: '600' }}>
+                  中心点: {circleCenter.name}
+                </div>
+                <div style={{ fontSize: '12px', color: '#0284c7', marginTop: '2px' }}>
+                  {circleCenter.province}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={clearCircleCenter}
+              disabled={!circleCenter}
+              style={{
+                width: '100%',
+                padding: '8px',
+                backgroundColor: circleCenter ? '#ef4444' : '#d1d5db',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '14px',
+                cursor: circleCenter ? 'pointer' : 'not-allowed'
+              }}
+            >
+              清除中心点
+            </button>
+
+            <div style={{ marginTop: '10px', fontSize: '12px', color: '#6b7280' }}>
+              点击任意城市设置为距离测量中心点
+            </div>
+          </>
+        )}
+      </DistanceControls>
+
       {/* 统计面板 */}
       <StatsPanel>
-        <h4 style={{ margin: '0 0 15px 0', color: '#1f2937' }}>数据统计</h4>
-        <p style={{ margin: '5px 0', color: '#6b7280' }}>
-          <strong>城市总数:</strong> {stats.total}
-        </p>
-        <p style={{ margin: '5px 0', color: '#6b7280' }}>
-          <strong>地图显示:</strong> {stats.validCoordinates}
-        </p>
-        <p style={{ margin: '5px 0', color: '#6b7280' }}>
-          <strong>平均热度:</strong> {Math.round(stats.avgHeat)}
-        </p>
-        <div style={{ marginTop: '10px' }}>
-          <p style={{ margin: '5px 0', fontSize: '12px', color: '#9ca3af' }}>各等级分布:</p>
-          {heatLevels.map((level) => (
-            <p key={level.level} style={{ margin: '2px 0', fontSize: '12px', color: level.color }}>
-              {level.name}: {stats.byLevel[level.level] || 0}个
-            </p>
-          ))}
-        </div>
-        <div style={{ marginTop: '15px', paddingTop: '10px', borderTop: '1px solid #e5e7eb' }}>
-          <p style={{ margin: '0', fontSize: '11px', color: '#9ca3af' }}>
-            地图服务: {useBackupTiles ? 'Voyager无标签 (备用)' : 'Light无标签 (主要)'}
-            <span style={{ 
-              display: 'inline-block', 
-              width: '8px', 
-              height: '8px', 
-              backgroundColor: useBackupTiles ? '#f59e0b' : '#10b981',
-              borderRadius: '50%',
-              marginLeft: '5px'
-            }}></span>
-          </p>
+        <h4 style={{ margin: '0 0 15px 0', color: '#1f2937', fontSize: '16px' }}>数据统计</h4>
+        <div style={{ fontSize: '14px', color: '#374151', lineHeight: '1.6' }}>
+          <p style={{ margin: '5px 0' }}>总城市数: <strong>{stats.total}</strong></p>
+          <p style={{ margin: '5px 0' }}>有效坐标: <strong>{stats.validCoordinates}</strong></p>
+          <p style={{ margin: '5px 0' }}>平均热度: <strong>{Math.round(stats.avgHeat)}</strong></p>
+          
+          <div style={{ marginTop: '15px', paddingTop: '10px', borderTop: '1px solid #e5e7eb' }}>
+            <p style={{ margin: '5px 0', fontSize: '13px', color: '#6b7280' }}>各等级分布:</p>
+            {Object.entries(stats.byLevel)
+              .sort(([a], [b]) => Number(b) - Number(a))
+              .map(([level, count]) => (
+                <p key={level} style={{ margin: '3px 0', fontSize: '12px', color: '#6b7280' }}>
+                  {level}级: {count}个
+                </p>
+              ))
+            }
+          </div>
         </div>
       </StatsPanel>
     </MapWrapper>
