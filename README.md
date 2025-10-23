@@ -151,5 +151,5 @@ src/
 ## 🙏 致谢
 
 - [Leaflet](https://leafletjs.com/) - 优秀的开源地图库
-- [React](https://reactjs.org/) - 强大的前端框架
+- [React](https://reactjs.com/) - 强大的前端框架
 - [OpenStreetMap](https://www.openstreetmap.org/) - 开放的地图数据
